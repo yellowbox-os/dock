@@ -6,6 +6,7 @@
     self = [super init];
     if (self) {
         _appIcons = [[NSMutableArray alloc] init];
+        _workspace = [NSWorkspace sharedWorkspace];  // Initialize the workspace property with the shared instance
         [self setupDockWindow];
     }
     return self;
@@ -27,14 +28,17 @@
     NSView *contentView = [self.dockWindow contentView];
     
     // Add application icons to the dock window
-    [self addApplicationIcon:@"Terminal" withIcon:[NSImage imageNamed:@"NSApplicationIcon"]];
-    [self addApplicationIcon:@"Browser" withIcon:[NSImage imageNamed:@"NSNetwork"]];
+    // TODO: Make this based on saved state
+    [self addApplicationIcon:@"GWorkspace" /*withIcon:[NSImage imageNamed:@"NSNetwork"]*/];
+    [self addApplicationIcon:@"Terminal" /*withIcon:[NSImage imageNamed:@"NSApplicationIcon"]*/];
+    [self addApplicationIcon:@"SystemPreferences" /*withIcon:[NSImage imageNamed:@"NSApplicationIcon"]*/];
     
     [self.dockWindow makeKeyAndOrderFront:nil];
 }
 
-- (void)addApplicationIcon:(NSString *)appName withIcon:(NSImage *)iconImage {
+- (void)addApplicationIcon:(NSString *)appName /*withIcon:(NSImage *)iconImage*/ {
     NSButton *appButton = [[NSButton alloc] initWithFrame:NSMakeRect([self.appIcons count] * 60, 10, 50, 50)];
+    NSImage *iconImage = [self.workspace appIconForApp:appName];
     [appButton setImage:iconImage];
     [appButton setTitle:appName];
     [appButton setBordered:NO];
@@ -49,13 +53,10 @@
     NSButton *clickedButton = (NSButton *)sender;
     NSString *appName = [clickedButton title];
     
-    NSLog(@"Launching application: %@", appName);
-    
-    // Implement launching the corresponding application
-    if ([appName isEqualToString:@"Terminal"]) {
-        [[NSWorkspace sharedWorkspace] launchApplication:@"Terminal.app"];
-    } else if ([appName isEqualToString:@"Browser"]) {
-        [[NSWorkspace sharedWorkspace] launchApplication:@"Browser.app"];
+    if ([appName isEqualToString:@"GWorkspace"] || [appName isEqualToString:@"Trash"]) {
+      NSLog(@"Launching application: %@", appName);
+    } else {
+      [self.workspace launchApplication:appName];
     }
 }
 
