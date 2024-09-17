@@ -2,22 +2,36 @@
 #import <AppKit/AppKit.h>
 #import "ActiveLight.h"
 
-@interface DockIcon : NSButton 
+@interface DockIcon : NSButton <NSDraggingSource>
 
+@property CGFloat iconSize;
+@property CGFloat activeLightDiameter;;
+@property CGFloat iconSizeMultiplier;
 @property (strong) NSImage *iconImage;
 @property (strong) NSString *appName;
 @property  BOOL showLabel;
+@property (strong) NSWindow *dragWindow;
+@property  BOOL isDragging;
+@property  BOOL isDragEnabled;
 @property (strong) NSWorkspace *workspace;
 @property (strong) ActiveLight *activeLight;
+
+// Define properties to store target and actions
+@property (nonatomic, weak) id target;
+@property (nonatomic) SEL mouseUpAction;
 
 
 - (void)setupDockIcon;
 
 - (void)setLabelVisibility:(BOOL)isVisible;
 
-// - (NSImage *)getIconImage;
+- (NSImage *)getIconImage;
 
-// - (void)setIconImage:(NSImage *)iconImage;
+- (void)setIconImage:(NSImage *)iconImage;
+
+- (CGFloat)getIconSize;
+
+- (void)setIconSize:(CGFloat)iconSize;
 
 - (NSString *)getAppName;
 

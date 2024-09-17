@@ -1,31 +1,47 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import "DockGroup.h"
 #import "DockIcon.h"
+#import "DockDivider.h"
 
 @interface DockAppController : NSObject <NSApplicationDelegate>
 
 @property (strong) NSArray *defaultIcons;
 @property (strong) NSString *dockPosition;
+@property (strong) NSString *fileManagerAppName;
 @property (strong) NSWindow *dockWindow;
-@property (strong) NSMutableArray *dockedIcons;
-@property (strong) NSMutableArray *undockedIcons;
 @property (strong) NSWorkspace *workspace;
+
+@property (strong) DockGroup *fileManagerGroup;
+@property (strong) DockGroup *trashGroup;
+@property (strong) DockGroup *dockedGroup;
+@property (strong) DockGroup *runningGroup;
+@property (strong) DockGroup *placesGroup;
+
+@property (strong) DockDivider *dockedDivider;
+@property (strong) DockDivider *runningDivider;
+
+// Style
 @property CGFloat iconSize;
 @property CGFloat activeLight;
 @property CGFloat padding;
+@property BOOL isUnified;
+@property BOOL showDocked;
+@property BOOL showRunning;
+@property BOOL showPlaces;
+
+@property DockGroup *dropTarget;
 
 // Dock Window Management
 - (void)setupDockWindow;
 - (void)updateDockWindow;
 
 // Icon Management
-// - (void)addApplicationIcon:(NSString *)appName withDockedStatus:(BOOL)isDocked; // DEPRECATED
-- (DockIcon *)generateIcon:(NSString *)appName withDockedStatus:(BOOL)isDocked;
-- (NSRect)generateLocation:(NSString *)dockPosition forDockedStatus:(BOOL)isDocked atIndex:(CGFloat)index;
-- (void)addDivider;
-- (void)iconClicked:(id)sender;
-- (DockIcon *)addIcon:(NSString *)appName toDockedArray:(BOOL)isDocked;
-- (void)removeIcon:(NSString *)appName fromDockedArray:(BOOL)isDocked;
+- (void)iconIsAboutToDrag:(NSNotification *)notification;
+- (void)iconIsDragging:(NSNotification *)notification;
+- (void)iconDropped:(NSString *)appName inGroup:(DockGroup *)dockGroup;
+- (void)iconAddedToGroup:(NSNotification *)notification;
+- (void)iconRemovedFromWindow:(NSNotification *)notification;
 
 // Workspace Events
 - (void)applicationIsLaunching:(NSNotification *)notification;
@@ -34,18 +50,19 @@
 - (void)activeApplicationChanged:(NSNotification *)notification;
 
 // Movers & Helpers
-- (BOOL)isIconDocked:(NSString *)appName;
-// - (BOOL)isAppRunning:(NSString *)appName;
-- (NSUInteger)indexOfIcon:(NSString *)appName byDockedStatus:(BOOL)isDocked;
 - (void)checkForNewActivatedIcons;
 - (CGFloat)calculateDockWidth;
-- (DockIcon *)getIconByName:(NSString *)appName withDockedStatus:(BOOL)isDocked;
-- (void)updateIconPositions:(NSUInteger)startIndex fromDockedIcons:(BOOL)isDocked expandDock:(BOOL)isExpanding;
+- (BOOL)detectGroupHover:(NSString *)appName inGroup:(DockGroup *)dockGroup currentX:(CGFloat)currentX currentY:(CGFloat)currentY;
+- (DockIcon *)detectIconHover:(NSString *)appName inGroup:(DockGroup *)dockGroup currentX:(CGFloat)currentX currentY:(CGFloat)currentY;
+- (DockGroup *)findDockGroupByName:(NSString *)groupName;
 
 // Defaults
 - (void)resetDockedIcons;
 - (void)saveDockedIconsToUserDefaults;
 - (void)loadDockedIconsFromUserDefaults;
+
+// Define methods that will handle events from DockIcon
+- (void)iconMouseUp:(id)sender;
 
 @end
 
