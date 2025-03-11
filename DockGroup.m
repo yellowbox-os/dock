@@ -20,7 +20,7 @@
         _groupName = @"Unknown";
         _workspace = [NSWorkspace sharedWorkspace];
         _dockWindow = nil;
-        _defaultIcons = [NSArray arrayWithObjects:@"Workspace", @"Terminal", @"SystemPreferences", nil];
+        _defaultIcons = [NSArray arrayWithObjects:/*@"Workspace",*/ @"Terminal", nil];
         _dockPosition = @"Bottom";
         _direction = @"Horizontal";
         _startX = 0;

@@ -17,7 +17,7 @@
         _trashGroup = nil;
         _dockedDivider = nil;
         _runningDivider = nil;
-        _defaultIcons = [NSArray arrayWithObjects:/*@"Workspace",*/ @"Terminal", @"SystemPreferences", nil];
+        _defaultIcons = [NSArray arrayWithObjects:/*@"Workspace",*/ @"Terminal", nil];
         _dockPosition = @"Bottom";
         
         _showDocked = YES;
